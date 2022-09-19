@@ -9,9 +9,10 @@ float prix;
 };
 
 //Global variable
-int oldi=0;
+
 int i=0;
 int oldQ=0;
+int exciste=-10;
 //Les Fonctions
 void ajoutezProduit(struct Produit produit[100],int *q){
 
@@ -52,6 +53,18 @@ for(h=0;h<oldQ;h++){
 
 }
 
+void recherche(struct Produit produit[100],int X){
+
+    int l;
+
+    for(l=0;l<oldQ;l++){
+        if(X == produit[l].quantite){
+             exciste= l;
+        }
+
+    }
+return exciste;
+}
 //fonction d'affichage
 
 int main()
@@ -65,6 +78,7 @@ do{
 //Menu de choix
 puts("Pour Ajouter un nouveaux produit press A\n");
 puts("Pour Afficher les produits press B\n");
+puts("Pour rechercher un produit press R\n");
 puts("Pour quitter le programme press Q\n");
 scanf("%c",&choixDeService);
 
@@ -80,16 +94,50 @@ case 'A': // Ajouter
 
     ajoutezProduit(produit,q);
    }
-break;
+   break;
 
-case 'B':
+case 'B'://Afficher
     {
     system("cls");
-
     afficherProduits(produit,q);
     }
+    break;
 
-break;
+case 'R'://Rechecher
+    {
+        char choixDeRecherche;
+        system("cls");
+        printf("Determnier la methode de rechechrche\n");
+        printf("Tapez C si la recherche est avec La code\n");
+        printf("Tapez Q si la recherche est avec La quantiter\n");
+        scanf("%s",&choixDeRecherche);
+
+        if (choixDeRecherche == 'Q'){
+          int quantiterRcherche;
+          puts("Tapez la quantiter");
+          scanf("%d",&quantiterRcherche);
+          recherche(produit,quantiterRcherche);
+
+          if(exciste==-10){
+            puts("Cette quantiter ne trouve pas");
+          }else{
+          printf("**********************************\n");
+          printf("le code de produit %d est %s\n",exciste+1,produit[exciste].code);
+
+          printf("le nom de produit %d est %s\n",exciste+1,produit[exciste].nom);
+
+          printf("le quantite de produit %d est %d\n",exciste+1,produit[exciste].quantite);
+
+          printf("le prix de produit %d est %f\n",exciste+1,produit[exciste].prix);
+
+          exciste=-10;
+          }
+
+        }else{
+          //Recherche avec Code
+        }
+    }
+    break;
 }
 
 
