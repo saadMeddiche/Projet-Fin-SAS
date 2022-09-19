@@ -65,7 +65,9 @@ void recherche(struct Produit produit[100],int X){
     }
 return exciste;
 }
-//fonction d'affichage
+
+void supprimer(){
+}
 
 int main()
 {
@@ -79,8 +81,9 @@ do{
 puts("Pour Ajouter un nouveaux produit press A\n");
 puts("Pour Afficher les produits press B\n");
 puts("Pour rechercher un produit press R\n");
+puts("Pour Supprimer un produit press S\n");
 puts("Pour quitter le programme press Q\n");
-scanf("%c",&choixDeService);
+scanf("%s",&choixDeService);
 
 //Determiner le Choix
 switch (choixDeService)
@@ -138,7 +141,14 @@ case 'R'://Rechecher
         }
     }
     break;
-}
+
+case 'S':
+    {
+
+
+    }
+    break;
+}//fin de switch
 
 
 
