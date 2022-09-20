@@ -100,31 +100,48 @@ i--;
 }
 
 void ordreParNom(struct Produit produit[100]){
-    printf("test 3\n");
 int conteur;
 int k;
 char swap[100];
+
 do {
   conteur=0;
-printf("test 4\n");
+
 for(k=0;k<oldQ-1;k++){
-printf("test 5\n");
     if(strcmp(produit[k].nom,produit[k+1].nom)>0){
-            printf("test 6\n");
         strcpy(swap,produit[k].nom);
         strcpy(produit[k].nom,produit[k+1].nom);
         strcpy(produit[k+1].nom,swap);
         conteur--;
     }else {
-        printf("test 7\n");
     conteur++;
     }
-printf("test 8\n");
 }
-printf("test 9\n");
 
 }while(conteur>oldQ && k<oldQ-1 );
 
+}
+
+void ordreParPrix(struct Produit produit[100]){
+int conteur;
+int k;
+int swap;
+
+do{
+   conteur=0;
+   for(k=0;k<oldQ-1;k++){
+    if(produit[k].prix - produit[k+1].prix>0){
+    conteur++;
+
+    }else{
+    swap=produit[k+1].prix;
+    produit[k+1].prix=produit[k].prix ;
+    produit[k].prix =swap;
+    }
+
+   }
+
+}while(conteur>oldQ-1 && k<oldQ-1);
 }
 int main()
 {
@@ -287,8 +304,8 @@ case 'L'://Lister
         char choixDeListe;
 
      puts("------------------------Choisir la methode de l'orde---------------------------------");
-     puts("Pour lister tous les produits selon l’ordre alphabetique  croissant du nom, press [N]");
-     puts("Pour lister tous les produits selon l’ordre  décroissant du prix, press --------- [P]");
+     puts("Pour lister tous les produits selon l’ordre alphabetique  croissant du nom, press [N]");
+     puts("Pour lister tous les produits selon l’ordre  décroissant du prix, press --------- [P]");
      puts("-------------------------------------------------------------------------------------");
 
      scanf("%s",&choixDeListe);
@@ -301,7 +318,10 @@ case 'L'://Lister
                  afficherProduits(produit);
           }break;
 
-          case 'L':{//ordre avec prix
+          case 'P':{//ordre avec prix
+
+                 ordreParPrix(produit);
+                 afficherProduits(produit);
 
 
           }break;
