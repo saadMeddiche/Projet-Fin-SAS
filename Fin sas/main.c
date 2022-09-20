@@ -52,7 +52,7 @@ for(h=0;h<oldQ;h++){
 
     printf("le quantite de produit%d est %d\n",h+1  ,  produit[h].quantite);
 
-    printf("le prix de produit %d est    %f\n",h+1  ,      produit[h].prix);
+    printf("le prix de produit %d est    %f\n",h+1  ,      produit[h].prix + 0.15 * produit[h].prix );
 
 }
 
@@ -99,6 +99,33 @@ i--;
 
 }
 
+void ordreParNom(struct Produit produit[100]){
+    printf("test 3\n");
+int conteur;
+int k;
+char swap[100];
+do {
+  conteur=0;
+printf("test 4\n");
+for(k=0;k<oldQ-1;k++){
+printf("test 5\n");
+    if(strcmp(produit[k].nom,produit[k+1].nom)>0){
+            printf("test 6\n");
+        strcpy(swap,produit[k].nom);
+        strcpy(produit[k].nom,produit[k+1].nom);
+        strcpy(produit[k+1].nom,swap);
+        conteur--;
+    }else {
+        printf("test 7\n");
+    conteur++;
+    }
+printf("test 8\n");
+}
+printf("test 9\n");
+
+}while(conteur>oldQ && k<oldQ-1 );
+
+}
 int main()
 {
 
@@ -118,8 +145,10 @@ puts("-Pour rechercher un produit press -- [R]-");
 puts("-                                       -");
 puts("-Pour Supprimer un produit press --- [S]-");
 puts("-                                       -");
+puts("-Pour lister les produits press ---- [L]-");
+puts("-                                       -");
 puts("-Pour quitter le programme press --- [Q]-");
-puts("----------------------------------------");
+puts("-----------------------------------------");
 
 
 scanf("%s",&choixDeService);
@@ -147,6 +176,7 @@ case 'B'://Afficher
 
 case 'R'://Rechecher
     {
+        system("cls");
         //Choisir la methode de recherche
         char choixDeRecherche;
         system("cls");
@@ -202,10 +232,10 @@ case 'R'://Rechecher
     }
     break;
 
-case 'S':
+case 'S'://Supprimer
     {
         //choisire la methode de suprimation
-
+    system("cls");
     char codeASupprimer[30];
     puts("Tapez le code du produit que vous voulez le supprimer");
     scanf("%s",&codeASupprimer);
@@ -251,6 +281,42 @@ case 'S':
 
     }
     break;
+
+case 'L'://Lister
+    {
+        char choixDeListe;
+
+     puts("------------------------Choisir la methode de l'orde---------------------------------");
+     puts("Pour lister tous les produits selon l’ordre alphabetique  croissant du nom, press [N]");
+     puts("Pour lister tous les produits selon l’ordre  décroissant du prix, press --------- [P]");
+     puts("-------------------------------------------------------------------------------------");
+
+     scanf("%s",&choixDeListe);
+      printf("test 0\n");
+     switch (choixDeListe){
+      printf("test 1\n");
+          case 'N':{// ordre avec nom
+           printf("test 2\n");
+                 ordreParNom(produit);
+                 afficherProduits(produit);
+          }break;
+
+          case 'L':{//ordre avec prix
+
+
+          }break;
+
+
+     }
+
+
+
+
+
+
+    }break;
+
+
 }//fin de switch
 
 
