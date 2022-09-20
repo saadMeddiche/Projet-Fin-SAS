@@ -1,22 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 //Les structures
 struct Produit {
 char code[100];
 char nom[30];
 int quantite;
 float prix;
+int date; //Seulement pour la comparaison
+int anne;
+int jour;
+int mois;
 };
 
 //Global variable
-
+time_t date;
 int i=0;
-
-
 int oldQ=0;
 int exciste=-10; //Return de la fonction rechercheParQuantiter
 int excisteCode=-11;//Return de la rechercheParCode
+int quantiterAcheter=0;
 //Les Fonctions
 void ajoutezProduit(struct Produit produit[100],int *q){
 
@@ -34,6 +38,8 @@ for(i;i<oldQ;i++){
     printf("Tapez le prix de produit %d!!\n",i+1);
     scanf("%f",&produit[i].prix);
 
+    printf("%s\n",produit[0].code);
+
 }
 i = i + 0; // Ymkn n9dr ngl3o
 
@@ -41,9 +47,7 @@ i = i + 0; // Ymkn n9dr ngl3o
 
 void afficherProduits(struct Produit produit[100]){
 int h;
-
 for(h=0;h<oldQ;h++){
-
     printf("**********************************\n");
 
     printf("le code de produit  %d est    %s\n", h+1,         produit[h].code);
@@ -143,8 +147,30 @@ do{
 
 }while(conteur>oldQ-1 && k<oldQ-1);
 }
+
+void acheter(struct Produit produit[100]){
+ //save the current date Lien: https://waytolearnx.com/2019/09/afficher-la-date-et-lheure-courante-en-langage-c.html
+int tm = localtime(&date);
+time(&date);
+struct tm *local = localtime(&date);
+
+
+produit[excisteCode].quantite = produit[excisteCode].quantite - quantiterAcheter;
+/*Example: on 09/11/2022
+et in 11/09/2022
+regle: (jour-mois)+annee
+*/
+
+produit[excisteCode].anne=local->tm_year + 1900;
+produit[excisteCode].mois=local->tm_mon + 1;
+produit[excisteCode].jour=local->tm_mday;
+
+produit[excisteCode].date=(produit[excisteCode].jour - produit[excisteCode].mois) + produit[excisteCode].anne;
+
+}
 int main()
 {
+
 
 struct Produit produit[100];
 char choixDeService;
@@ -158,6 +184,8 @@ puts("-Pour Ajouter un  produit press ---- [A]-");
 puts("-                                       -");
 puts("-Pour Afficher les produits press -- [B]-");
 puts("-                                       -");
+puts("-Pour Acheter un produit press ----- [C]-");
+puts("-                                       -");
 puts("-Pour rechercher un produit press -- [R]-");
 puts("-                                       -");
 puts("-Pour Supprimer un produit press --- [S]-");
@@ -166,7 +194,6 @@ puts("-Pour lister les produits press ---- [L]-");
 puts("-                                       -");
 puts("-Pour quitter le programme press --- [Q]-");
 puts("-----------------------------------------");
-
 
 scanf("%s",&choixDeService);
 
@@ -187,6 +214,7 @@ case 'A': // Ajouter
 case 'B'://Afficher
     {
     system("cls");
+    printf("%s\n",produit[0].code);
     afficherProduits(produit);
     }
     break;
@@ -336,7 +364,22 @@ case 'L'://Lister
 
     }break;
 
+case 'C': //acheter
+    {
+     char codeProduit[100];
+     puts("Tapez le code du produit");
+     scanf("%s",&codeProduit);
+     puts("Donner la quantiter a ete acheter");
+     scanf("%d",&quantiterAcheter);
 
+     rechercheParCode(produit,codeProduit);
+
+     acheter(produit);
+     printf("%d\n",produit[excisteCode].date);
+     printf("%d %d %d \n",produit[excisteCode].jour, produit[excisteCode].mois), produit[excisteCode].anne;
+     quantiterAcheter=0;
+     excisteCode=-11;
+    }break;
 }//fin de switch
 
 
