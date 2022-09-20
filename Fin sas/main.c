@@ -3,7 +3,8 @@
 #include <string.h>
 //Les structures
 struct Produit {
-char code[20],nom[30];
+char code[100];
+char nom[30];
 int quantite;
 float prix;
 };
@@ -11,8 +12,11 @@ float prix;
 //Global variable
 
 int i=0;
+
+
 int oldQ=0;
-int exciste=-10;
+int exciste=-10; //Return de la fonction rechercheParQuantiter
+int excisteCode=-11;//Return de la rechercheParCode
 //Les Fonctions
 void ajoutezProduit(struct Produit produit[100],int *q){
 
@@ -31,29 +35,30 @@ for(i;i<oldQ;i++){
     scanf("%f",&produit[i].prix);
 
 }
-i = i + 0;
+i = i + 0; // Ymkn n9dr ngl3o
 
 }
 
 void afficherProduits(struct Produit produit[100],int *q){
-int h=0;
+int h;
 
 for(h=0;h<oldQ;h++){
 
     printf("**********************************\n");
-    printf("le code de produit %d est %s\n",h+1,produit[h].code);
 
-    printf("le nom de produit %d est %s\n",h+1,produit[h].nom);
+    printf("le code de produit  %d est    %s\n", h+1,         produit[h].code);
 
-    printf("le quantite de produit %d est %d\n",h+1,produit[h].quantite);
+    printf("le nom de produit %d est     %s\n",h+1  ,       produit[h].nom);
 
-    printf("le prix de produit %d est %f\n",h+1,produit[h].prix);
+    printf("le quantite de produit%d est %d\n",h+1  ,  produit[h].quantite);
+
+    printf("le prix de produit %d est    %f\n",h+1  ,      produit[h].prix);
 
 }
 
 }
 
-void recherche(struct Produit produit[100],int X){
+void rechercheParQuantiter(struct Produit produit[100],int X){
 
     int l;
 
@@ -64,6 +69,17 @@ void recherche(struct Produit produit[100],int X){
 
     }
 return exciste;
+}
+
+void rechercheParCode(struct Produit produit[100],int Y){
+    int r;
+for(r=0;r<oldQ;r++){
+    if(strcmp(Y , produit[r].code)==0){
+      excisteCode=r;
+    }
+
+}
+return excisteCode;
 }
 
 void supprimer(){
@@ -78,11 +94,19 @@ int *q;
 q=&nmbrDeNouveauxProduit;
 do{
 //Menu de choix
-puts("Pour Ajouter un nouveaux produit press A\n");
-puts("Pour Afficher les produits press B\n");
-puts("Pour rechercher un produit press R\n");
-puts("Pour Supprimer un produit press S\n");
-puts("Pour quitter le programme press Q\n");
+puts("-----------------------------------------");
+puts("-Pour Ajouter un  produit press ---- [A]-");
+puts("-                                       -");
+puts("-Pour Afficher les produits press -- [B]-");
+puts("-                                       -");
+puts("-Pour rechercher un produit press -- [R]-");
+puts("-                                       -");
+puts("-Pour Supprimer un produit press --- [S]-");
+puts("-                                       -");
+puts("-Pour quitter le programme press --- [Q]-");
+puts("----------------------------------------");
+
+
 scanf("%s",&choixDeService);
 
 //Determiner le Choix
@@ -114,12 +138,12 @@ case 'R'://Rechecher
         printf("Tapez C si la recherche est avec La code\n");
         printf("Tapez Q si la recherche est avec La quantiter\n");
         scanf("%s",&choixDeRecherche);
-
-        if (choixDeRecherche == 'Q'){
+        system("cls");
+        if (choixDeRecherche == 'Q'){//Recherche aven quantiter
           int quantiterRcherche;
           puts("Tapez la quantiter");
           scanf("%d",&quantiterRcherche);
-          recherche(produit,quantiterRcherche);
+          rechercheParQuantiter(produit,quantiterRcherche);
 
           if(exciste==-10){
             puts("Cette quantiter ne trouve pas");
@@ -136,9 +160,27 @@ case 'R'://Rechecher
           exciste=-10;
           }
 
-        }else{
-          //Recherche avec Code
+        }else{//Recherche avec Code
+           char codeRcherche[30];
+          puts("Tapez le code");
+          scanf("%s",&codeRcherche);
+          rechercheParCode(produit,codeRcherche);
+          if(exciste==-11){
+            puts("Ce code ne trouve pas");
+          }else{
+          printf("**********************************\n");
+          printf("le code de produit %d est %s\n",excisteCode+1,produit[excisteCode].code);
+
+          printf("le nom de produit %d est %s\n",excisteCode+1,produit[excisteCode].nom);
+
+          printf("le quantite de produit %d est %d\n",excisteCode+1,produit[excisteCode].quantite);
+
+          printf("le prix de produit %d est %f\n",excisteCode+1,produit[excisteCode].prix);
+
+          excisteCode=-11;
+          }
         }
+
     }
     break;
 
