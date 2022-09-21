@@ -18,7 +18,7 @@ int mois;
 int i=0;
 int oldQ=0;
 int exciste=-10; //Return de la fonction rechercheParQuantiter
-int excisteCode=-11;//Return de la rechercheParCode
+int excisteCode=-11; //Return de la rechercheParCode
 int quantiterAcheter=0;
 int quantiterAjouter=0;
 
@@ -177,6 +177,21 @@ void alimenterStock(struct Produit produit[100]){
 produit[excisteCode].quantite = produit[excisteCode].quantite + quantiterAjouter;
 }
 
+void etatDuStocke(struct Produit produit[100]){
+
+
+int v;
+for(v=0;v<oldQ;v++){
+    if(produit[v].quantite<3){
+       printf("---------Produit%d---------\n",v+1);
+       printf("Code: %s\n",produit[v].code);
+       printf("Nom: %s\n",produit[v].nom);
+       printf("Quantite: %d\n",produit[v].quantite);
+       printf("Prix: %f\n",produit[v].prix + 0.15 *produit[v].prix);
+    }
+}
+
+}
 int main()
 {
 
@@ -198,6 +213,8 @@ puts("-                                       -");
 puts("-Pour Alimenter le stock press ----- [M]-");
 puts("-                                       -");
 puts("-Pour rechercher un produit press -- [R]-");
+puts("-                                       -");
+puts("-Pour Etat du stock  press --------- [E]-");
 puts("-                                       -");
 puts("-Pour Supprimer un produit press --- [S]-");
 puts("-                                       -");
@@ -409,6 +426,12 @@ case 'M'://Alimentez
 
      quantiterAcheter=0;
      excisteCode=-11;
+
+    }break;
+
+case 'E':
+    {
+        etatDuStocke(produit);
 
     }break;
 
