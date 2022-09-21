@@ -20,13 +20,13 @@ float tableau;
 };
 
 //Global variable
-int i=0;
+int i=0; //Pour stocker le nombre du derniere case a la fonction ajoutez
 int oldQ=0;
 int exciste=-10; //Return de la fonction rechercheParQuantiter
 int excisteCode=-11; //Return de la rechercheParCode
 int quantiterAcheter=0;
 int quantiterAjouter=0;
-
+int nmbrDeNouveauxProduit;
 //variables du statique
 float prixTotal=0;
 float prixMoyenne=0;
@@ -36,44 +36,48 @@ float Max;
 float Min;
 
 //Les Fonctions
-void ajoutezProduit(struct Produit produit[100],int *q){
+void ajoutezProduit(struct Produit produit[100],int L){
 
-oldQ = (*q) + oldQ;
+oldQ = L + oldQ;
 
 for(i;i<oldQ;i++){
     system("cls");
-
-    printf("Tapez le code de produit %d!!\n",i+1);
+    printf("___________________________________\n");
+    printf("Tapez le code de produit %d : ",i+1);
     scanf("%s",&produit[i].code);
-    printf("Tapez le nom de produit %d!!\n",i+1);
+    printf("___________________________________\n");
+    printf("Tapez le nom de produit %d : ",i+1);
     scanf("%s",&produit[i].nom);
-    printf("Tapez le quantite de produit %d!!\n",i+1);
+    printf("___________________________________\n");
+    printf("Tapez le quantite de produit %d : ",i+1);
     scanf("%d",&produit[i].quantite);
-    printf("Tapez le prix de produit %d!!\n",i+1);
+    printf("___________________________________\n");
+    printf("Tapez le prix de produit %d : ",i+1);
     scanf("%f",&produit[i].prix);
-
-    printf("%s\n",produit[0].code);
+    printf("___________________________________\n");
+    //printf("%s\n",produit[0].code);
 
 }
-i = i + 0; // Ymkn n9dr ngl3o
+//i = i + 0; // Ymkn n9dr ngl3o
 
 }
 
 void afficherProduits(struct Produit produit[100]){
 int h;
 for(h=0;h<oldQ;h++){
-    printf("**********************************\n");
+    printf("\n******Produit %d******\n",h+1);
 
-    printf("le code de produit  %d est    %s\n", h+1,         produit[h].code);
+    printf("Code : %s\n",     produit[h].code);
 
-    printf("le nom de produit %d est     %s\n",h+1  ,       produit[h].nom);
+    printf("Nom : %s\n",      produit[h].nom);
 
-    printf("le quantite de produit%d est %d\n",h+1  ,  produit[h].quantite);
+    printf("Quantite : %d\n", produit[h].quantite);
 
-    printf("le prix de produit %d est    %f\n",h+1  ,      produit[h].prix + 0.15 * produit[h].prix );
+    printf("Prix : %f\n" ,    produit[h].prix + 0.15 * produit[h].prix );
 
 }
-
+system("pause");
+system("cls");
 }
 
 void rechercheParQuantiter(struct Produit produit[100],int X){
@@ -230,16 +234,16 @@ Min=produit[k-1].tableau;
 }
 int main()
 {
-printf("******************\n");
-printf("* Bonjouuuuur :D *\n");
-printf("******************\n");
+printf("         ******************\n");
+printf("         * Bonjouuuuur :D *\n");
+printf("         ******************\n");
 
 
 struct Produit produit[100];
 char choixDeService;
-int i,nmbrDeNouveauxProduit;
-int *q;
-q=&nmbrDeNouveauxProduit;
+//int nmbrDeNouveauxProduit;
+//int *q;
+//q=&nmbrDeNouveauxProduit;
 do{
 //Menu de choix
 puts("-----------------------------------------");
@@ -272,11 +276,15 @@ switch (choixDeService)
 case 'A': // Ajouter
    {
     system("cls");
-
-    printf("Taper le nombre des nouvaux produits ajoute\n");
+    printf("\n-------------------------------------------\n");
+    printf("Taper le nombre des nouvaux produits ajoute \n");
+    printf("-------------------------------------------\n");
     scanf("%d",&nmbrDeNouveauxProduit);
 
-    ajoutezProduit(produit,q);
+    ajoutezProduit(produit,nmbrDeNouveauxProduit);
+
+    system("pause");
+    system("cls");
    }
    break;
 
@@ -435,13 +443,22 @@ case 'L'://Lister
 
 case 'C': //acheter
     {
+     system("clS");
      char codeProduit[100];
 
-     puts("Tapez le code du produit");
-     scanf("%s",&codeProduit);
+     puts("------------------------\n");
+     puts("Tapez le code du produit\n");
+     puts("------------------------\n");
 
-     puts("Donner la quantiter a ete acheter");
+     scanf("%s",&codeProduit);
+     puts("-------------------------------\n");
+     puts("Donner la quantiter a ete acheter\n");
+     puts("-------------------------------\n");
+
      scanf("%d",&quantiterAcheter);
+
+     system("pause");
+     system("cls");
 
      rechercheParCode(produit,codeProduit);
 
@@ -494,7 +511,13 @@ case 'U'://statistique
     printf("Min est :%f",Min);
 
     }break;
-
+case 'Q': //quiter le programme
+    {
+      printf("         ******************\n");
+      printf("         * Bye Byeeeee :D *\n");
+      printf("         ******************\n");
+      exit(0);
+    }break;
 default:
 system("cls");
 puts("--------------------------------");
@@ -510,7 +533,7 @@ sleep(2);
 
 
 
-}while(choixDeService != 'Q');
+}while(choixDeService != '+');
 
 
     return 0;
