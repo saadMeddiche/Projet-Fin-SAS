@@ -15,12 +15,13 @@ int mois;
 };
 
 //Global variable
-time_t date;
 int i=0;
 int oldQ=0;
 int exciste=-10; //Return de la fonction rechercheParQuantiter
 int excisteCode=-11;//Return de la rechercheParCode
 int quantiterAcheter=0;
+int quantiterAjouter=0;
+
 //Les Fonctions
 void ajoutezProduit(struct Produit produit[100],int *q){
 
@@ -150,11 +151,13 @@ do{
 
 void acheter(struct Produit produit[100]){
  //save the current date Lien: https://waytolearnx.com/2019/09/afficher-la-date-et-lheure-courante-en-langage-c.html
-int tm = localtime(&date);
+time_t date;
+
 time(&date);
+
 struct tm *local = localtime(&date);
 
-
+//mettre a jour la quantiter du produit
 produit[excisteCode].quantite = produit[excisteCode].quantite - quantiterAcheter;
 /*Example: on 09/11/2022
 et in 11/09/2022
@@ -168,6 +171,12 @@ produit[excisteCode].jour=local->tm_mday;
 produit[excisteCode].date=(produit[excisteCode].jour - produit[excisteCode].mois) + produit[excisteCode].anne;
 
 }
+
+void alimenterStock(struct Produit produit[100]){
+//mettre a jour la quantiter du produit
+produit[excisteCode].quantite = produit[excisteCode].quantite + quantiterAjouter;
+}
+
 int main()
 {
 
@@ -185,6 +194,8 @@ puts("-                                       -");
 puts("-Pour Afficher les produits press -- [B]-");
 puts("-                                       -");
 puts("-Pour Acheter un produit press ----- [C]-");
+puts("-                                       -");
+puts("-Pour Alimenter le stock press ----- [M]-");
 puts("-                                       -");
 puts("-Pour rechercher un produit press -- [R]-");
 puts("-                                       -");
@@ -367,19 +378,40 @@ case 'L'://Lister
 case 'C': //acheter
     {
      char codeProduit[100];
+
      puts("Tapez le code du produit");
      scanf("%s",&codeProduit);
+
      puts("Donner la quantiter a ete acheter");
      scanf("%d",&quantiterAcheter);
 
      rechercheParCode(produit,codeProduit);
 
      acheter(produit);
-     printf("%d\n",produit[excisteCode].date);
-     printf("%d %d %d \n",produit[excisteCode].jour, produit[excisteCode].mois), produit[excisteCode].anne;
+
      quantiterAcheter=0;
      excisteCode=-11;
     }break;
+
+case 'M'://Alimentez
+    {
+     char codeProduit[100];
+
+     puts("Tapez le code du produit");
+     scanf("%s",&codeProduit);
+
+     puts("Donner la quantiter a ete acheter");
+     scanf("%d",&quantiterAjouter);
+
+     rechercheParCode(produit,codeProduit);
+
+     alimenterStock(produit);
+
+     quantiterAcheter=0;
+     excisteCode=-11;
+
+    }break;
+
 }//fin de switch
 
 
