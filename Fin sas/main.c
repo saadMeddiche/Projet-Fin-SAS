@@ -2,16 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
 //Les structures
 struct Produit {
+//info du produit
 char code[100];
 char nom[30];
 int quantite;
 float prix;
+//info du date
 int date; //Seulement pour la comparaison
 int anne;
 int jour;
 int mois;
+//info du statique
+float tableau;
 };
 
 //Global variable
@@ -21,6 +26,14 @@ int exciste=-10; //Return de la fonction rechercheParQuantiter
 int excisteCode=-11; //Return de la rechercheParCode
 int quantiterAcheter=0;
 int quantiterAjouter=0;
+
+//variables du statique
+float prixTotal=0;
+float prixMoyenne=0;
+int sommeQuantiterAcheter=0;
+int O=0; //Pour stocker prix * quantiter d'un chaque produit
+float Max;
+float Min;
 
 //Les Fonctions
 void ajoutezProduit(struct Produit produit[100],int *q){
@@ -147,6 +160,7 @@ do{
    }
 
 }while(conteur>oldQ-1 && k<oldQ-1);
+
 }
 
 void acheter(struct Produit produit[100]){
@@ -179,7 +193,6 @@ produit[excisteCode].quantite = produit[excisteCode].quantite + quantiterAjouter
 
 void etatDuStocke(struct Produit produit[100]){
 
-
 int v;
 for(v=0;v<oldQ;v++){
     if(produit[v].quantite<3){
@@ -192,8 +205,34 @@ for(v=0;v<oldQ;v++){
 }
 
 }
+
+void ordreParPrixPourLesStatiques(struct Produit produit[100]){
+int conteur;
+int k;
+int swap;
+
+do{
+   conteur=0;
+   for(k=0;k<oldQ-1;k++){
+    if(produit[k].tableau - produit[k+1].tableau>0){
+    conteur++;
+
+    }else{
+    swap=produit[k+1].tableau;
+    produit[k+1].tableau = produit[k].tableau ;
+    produit[k].tableau = swap;
+    }
+
+}
+}while(conteur>oldQ-1 && k<oldQ-1);
+Max=produit[0].tableau;
+Min=produit[k-1].tableau;
+}
 int main()
 {
+printf("******************\n");
+printf("* Bonjouuuuur :D *\n");
+printf("******************\n");
 
 
 struct Produit produit[100];
@@ -217,6 +256,8 @@ puts("-                                       -");
 puts("-Pour Etat du stock  press --------- [E]-");
 puts("-                                       -");
 puts("-Pour Supprimer un produit press --- [S]-");
+puts("-                                       -");
+puts("-Pour les Statistique press -------- [U]-");
 puts("-                                       -");
 puts("-Pour lister les produits press ---- [L]-");
 puts("-                                       -");
@@ -404,9 +445,18 @@ case 'C': //acheter
 
      rechercheParCode(produit,codeProduit);
 
+     prixTotal= prixTotal + ((produit[excisteCode].prix+0.15*produit[excisteCode].prix) * quantiterAcheter);
+
+     sommeQuantiterAcheter = sommeQuantiterAcheter + quantiterAcheter;
+
+     prixMoyenne =  prixTotal / sommeQuantiterAcheter;
+     //Pour stocker prix * quantiter d'un chaque produit
+     produit[O].tableau = (produit[O].prix + 0.15 * produit[O].prix )*quantiterAcheter ;
+
      acheter(produit);
 
      quantiterAcheter=0;
+     O++;
      excisteCode=-11;
     }break;
 
@@ -429,12 +479,31 @@ case 'M'://Alimentez
 
     }break;
 
-case 'E':
+case 'E':// etat du stock
     {
         etatDuStocke(produit);
 
     }break;
 
+case 'U'://statistique
+    {
+    printf("Le prix total est:%f\n",prixTotal);
+    printf("Le prix moyenne est:%f\n",prixMoyenne);
+    ordreParPrixPourLesStatiques(produit);
+    printf("Max est :%f", Max);
+    printf("Min est :%f",Min);
+
+    }break;
+
+default:
+system("cls");
+puts("--------------------------------");
+puts("|                              |");
+puts("| Please entrer l'exacte choix |");
+puts("|                              |");
+puts("--------------------------------");
+
+sleep(2);
 }//fin de switch
 
 
