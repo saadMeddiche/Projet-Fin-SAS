@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <stdio.h> //Appeler plusieur fonction (EX: printf()et scanf() et puts())
+#include <stdlib.h> //Appeler plusieur fonction (EX: system()et exit() )
+#include <string.h> //Appeler plusieur fonction (EX: strcpy()et strcmp() )
+#include <time.h> //https://koor.fr/C/ctime/ctime.wp
 
 //Les structures
 struct Produit {
@@ -21,7 +21,7 @@ float tableau;
 
 //Global variable
 int i=0; //Pour stocker le nombre du derniere case a la fonction ajoutez
-int oldQ=0;
+int oldQ=0; // determiner le nombre de case utiliser
 int exciste=-10; //Return de la fonction rechercheParQuantiter
 int excisteCode=-11; //Return de la rechercheParCode
 int quantiterAcheter=0;
@@ -702,12 +702,7 @@ sleep(2);
 
 }//fin de switch
 
-
-
-
-
 }while(choixDeService != '+');
-
 
     return 0;
 }
