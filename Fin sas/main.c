@@ -43,9 +43,23 @@ oldQ = L + oldQ;
 
 for(i;i<oldQ;i++){
     system("cls");
+    begin:
     printf("___________________________________\n");
     printf("Tapez le code de produit %d : ",i+1);
     scanf("%s",&produit[i].code);
+
+    for(int l=0;l<i;l++){ //cheque if il ya deja un code
+       if (strcmp(produit[i].code,produit[l].code)==0) {
+        system("cls");
+        printf("-------------------\n");
+        printf("Il y a deja se code\n");
+        printf("-------------------\n");
+        system("pause");
+        system("cls");
+        goto begin;
+       }
+    }
+
     printf("___________________________________\n");
     printf("Tapez le nom de produit %d : ",i+1);
     scanf("%s",&produit[i].nom);
@@ -101,6 +115,7 @@ for(r=0;r<oldQ;r++){
       excisteCode=r;
 
     }
+
 }
 return excisteCode;
 }
