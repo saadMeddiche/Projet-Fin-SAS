@@ -6,7 +6,7 @@
 //Les structures
 struct Produit {
 //info du produit
-char code[100];
+char code[1000];
 char nom[30];
 int quantite;
 float prix;
@@ -27,11 +27,12 @@ int excisteCode=-11; //Return de la rechercheParCode
 int quantiterAcheter=0;
 int quantiterAjouter=0;
 int nmbrDeNouveauxProduit;
+
 //variables du statique
 float prixTotal=0;
 float prixMoyenne=0;
 int sommeQuantiterAcheter=0;
-int O=0; //Pour stocker prix * quantiter d'un chaque produit
+int O=0; //Pour stocker prix * quantiter d'un chaque produit (case acheter)
 float Max;
 float Min;
 
@@ -64,8 +65,8 @@ for(i;i<oldQ;i++){
 
 void afficherProduits(struct Produit produit[100]){
 int h;
-for(h=0;h<oldQ;h++){
-    printf("\n******Produit %d******\n",h+1);
+for(int h=0;h<oldQ;h++){
+    printf("\n-------Produit %d-------\n",h+1);
 
     printf("Code : %s\n",     produit[h].code);
 
@@ -74,7 +75,7 @@ for(h=0;h<oldQ;h++){
     printf("Quantite : %d\n", produit[h].quantite);
 
     printf("Prix : %f\n" ,    produit[h].prix + 0.15 * produit[h].prix );
-
+    printf("--------------------------\n\n\n");
 }
 system("pause");
 system("cls");
@@ -121,10 +122,12 @@ i--;
 
 }
 
+//Pour ordreParNom https://www.youtube.com/watch?v=Rd5V0Yemv4E (Probleme de condition) min:6:32
 void ordreParNom(struct Produit produit[100]){
 int conteur;
 int k;
 char swap[100];
+int swap2;
 
 do {
   conteur=0;
@@ -134,13 +137,23 @@ for(k=0;k<oldQ-1;k++){
         strcpy(swap,produit[k].nom);
         strcpy(produit[k].nom,produit[k+1].nom);
         strcpy(produit[k+1].nom,swap);
-        conteur--;
-    }else {
-    conteur++;
+
+        strcpy(swap,produit[k].code);
+        strcpy(produit[k].code,produit[k+1].code);
+        strcpy(produit[k+1].code,swap);
+
+        swap2 = produit[k].prix;
+        produit[k].prix = produit[k+1].prix;
+        produit[k+1].prix = swap2;
+
+        swap2 = produit[k].quantite;
+        produit[k].quantite = produit[k+1].quantite;
+        produit[k+1].quantite = swap2;
+        conteur=1;
     }
 }
 
-}while(conteur>oldQ && k<oldQ-1 );
+}while(conteur==1 && k<oldQ-1 );
 
 }
 
@@ -148,22 +161,35 @@ void ordreParPrix(struct Produit produit[100]){
 int conteur;
 int k;
 int swap;
-
+int swap2[100];
 do{
    conteur=0;
    for(k=0;k<oldQ-1;k++){
     if(produit[k].prix - produit[k+1].prix>0){
-    conteur++;
+
 
     }else{
-    swap=produit[k+1].prix;
-    produit[k+1].prix=produit[k].prix ;
-    produit[k].prix =swap;
+        strcpy(swap2,produit[k].nom);
+        strcpy(produit[k].nom,produit[k+1].nom);
+        strcpy(produit[k+1].nom,swap2);
+
+        strcpy(swap2,produit[k].code);
+        strcpy(produit[k].code,produit[k+1].code);
+        strcpy(produit[k+1].code,swap2);
+
+        swap = produit[k].prix;
+        produit[k].prix = produit[k+1].prix;
+        produit[k+1].prix = swap;
+
+        swap = produit[k].quantite;
+        produit[k].quantite = produit[k+1].quantite;
+        produit[k+1].quantite = swap;
+        conteur=1;
     }
 
    }
 
-}while(conteur>oldQ-1 && k<oldQ-1);
+}while(conteur==1 && k<oldQ-1);
 
 }
 
@@ -205,6 +231,7 @@ for(v=0;v<oldQ;v++){
        printf("Nom: %s\n",produit[v].nom);
        printf("Quantite: %d\n",produit[v].quantite);
        printf("Prix: %f\n",produit[v].prix + 0.15 *produit[v].prix);
+       printf("--------------------------\n\n\n");
     }
 }
 
@@ -240,12 +267,14 @@ printf("         ******************\n");
 
 
 struct Produit produit[100];
+int access=0; // access au austre choise si il ya deja un produit
 char choixDeService;
 //int nmbrDeNouveauxProduit;
 //int *q;
 //q=&nmbrDeNouveauxProduit;
 do{
 //Menu de choix
+
 puts("-----------------------------------------");
 puts("-Pour Ajouter un  produit press ---- [A]-");
 puts("-                                       -");
@@ -275,23 +304,44 @@ switch (choixDeService)
 {
 case 'A': // Ajouter
    {
+    beg:
+
+    access=1;
     system("cls");
     printf("\n-------------------------------------------\n");
     printf("Taper le nombre des nouvaux produits ajoute \n");
     printf("-------------------------------------------\n");
     scanf("%d",&nmbrDeNouveauxProduit);
+   if (nmbrDeNouveauxProduit>100 || nmbrDeNouveauxProduit <0){ //tka3rir
+    system("cls");
+    printf("--------------------------------\n");
+    printf("please un nombre entrer 0 et 100\n");
+    printf("--------------------------------\n");
+    system("pause");
+    goto beg;
+   }
 
     ajoutezProduit(produit,nmbrDeNouveauxProduit);
 
     system("pause");
     system("cls");
    }
+
    break;
 
 case 'B'://Afficher
     {
     system("cls");
-    printf("%s\n",produit[0].code);
+    if(access==0){
+        printf("---------------------------------\n");
+        printf("- Aucun produit pour l'afficher -\n");
+        printf("---------------------------------\n");
+        system("pause");
+        system("cls");
+        break;
+    }
+    //printf("%s\n",produit[0].code);
+
     afficherProduits(produit);
     }
     break;
@@ -299,53 +349,80 @@ case 'B'://Afficher
 case 'R'://Rechecher
     {
         system("cls");
+        if(access==0){
+        printf("---------------------------------\n");
+        printf("- Aucun produit pour rechercher -\n");
+        printf("---------------------------------\n");
+        system("pause");
+        system("cls");
+        break;
+    }
         //Choisir la methode de recherche
         char choixDeRecherche;
         system("cls");
+        printf("------------------------------------\n");
         printf("Determnier la methode de rechechrche\n");
-        printf("Tapez C si la recherche est avec La code\n");
-        printf("Tapez Q si la recherche est avec La quantiter\n");
+        printf("------------------------------------\n");
+        printf("Tapez [C] si la recherche est avec La code\n");
+        printf("Tapez [Q] si la recherche est avec La quantiter\n");
         scanf("%s",&choixDeRecherche);
         system("cls");
 
         //Recherche aven quantiter
         if (choixDeRecherche == 'Q'){
           int quantiterRcherche;
-          puts("Tapez la quantiter");
+          printf("------------------\n");
+          printf("Tapez la quantiter\n");
+          printf("------------------\n");
           scanf("%d",&quantiterRcherche);
           rechercheParQuantiter(produit,quantiterRcherche);
 
           if(exciste==-10){
+            puts("-----------------------------");
             puts("Cette quantiter ne trouve pas");
+            puts("-----------------------------");
+          system("pause");
+          system("cls");
           }else{
-          printf("**********************************\n");
-          printf("le code de produit %d est %s\n",exciste+1,produit[exciste].code);
+          printf("----------Produit%d--------\n",exciste+1);
+          printf("le code : %s\n",produit[exciste].code);
 
-          printf("le nom de produit %d est %s\n",exciste+1,produit[exciste].nom);
+          printf("le nom : %s\n",produit[exciste].nom);
 
-          printf("le quantite de produit %d est %d\n",exciste+1,produit[exciste].quantite);
+          printf("le quantite : %d\n",produit[exciste].quantite);
 
-          printf("le prix de produit %d est %f\n",exciste+1,produit[exciste].prix);
-
+          printf("le prix : %f\n",produit[exciste].prix);
+          printf("---------------------------\n");
+          system("pause");
+          system("cls");
           exciste=-10;
           }
 
         }else{//Recherche avec Code
            char codeRcherche[30];
-          puts("Tapez le code");
+          printf("-------------\n");
+          printf("Tapez le code\n");
+          printf("-------------\n");
           scanf("%s",&codeRcherche);
           rechercheParCode(produit,codeRcherche);
-          if(exciste==-11){
+          if(excisteCode==-11){
+            puts("---------------------");
             puts("Ce code ne trouve pas");
+            puts("---------------------");
+          system("pause");
+          system("cls");
           }else{
-          printf("**********************************\n");
-          printf("le code de produit %d est %s\n",excisteCode+1,produit[excisteCode].code);
+          printf("----------Produit%d--------\n",excisteCode+1);
+          printf("le code : %s\n",produit[excisteCode].code);
 
-          printf("le nom de produit %d est %s\n",excisteCode+1,produit[excisteCode].nom);
+          printf("le nom : %s\n",produit[excisteCode].nom);
 
-          printf("le quantite de produit %d est %d\n",excisteCode+1,produit[excisteCode].quantite);
+          printf("le quantite : %d\n",produit[excisteCode].quantite);
 
-          printf("le prix de produit %d est %f\n",excisteCode+1,produit[excisteCode].prix);
+          printf("le prix : %f\n",produit[excisteCode].prix);
+          printf("---------------------------\n");
+          system("pause");
+          system("cls");
 
           excisteCode=-11;
           }
@@ -356,35 +433,53 @@ case 'R'://Rechecher
 
 case 'S'://Supprimer
     {
-        //choisire la methode de suprimation
+        system("cls");
+        if(access==0){
+        printf("---------------------------------\n");
+        printf("- Aucun produit pour  supprimer -\n");
+        printf("---------------------------------\n");
+        system("pause");
+        system("cls");
+        break;
+    }
+
     system("cls");
     char codeASupprimer[30];
+    puts("(----------------------------------------------------");
     puts("Tapez le code du produit que vous voulez le supprimer");
+    puts("(----------------------------------------------------");
     scanf("%s",&codeASupprimer);
     rechercheParCode(produit,codeASupprimer);
     if(exciste==-11){
+            puts("---------------------");
             puts("Ce code ne trouve pas");
+            puts("---------------------");
           }else{
           char ouiOuNon;
-          printf("**********************************\n");
+          printf("----------Produit%d--------\n",excisteCode+1);
+          printf("le code : %s\n",produit[excisteCode].code);
 
-          printf("le code de produit %d est %s\n",excisteCode+1,produit[excisteCode].code);
+          printf("le nom : %s\n",produit[excisteCode].nom);
 
-          printf("le nom de produit %d est %s\n",excisteCode+1,produit[excisteCode].nom);
+          printf("le quantite : %d\n",produit[excisteCode].quantite);
 
-          printf("le quantite de produit %d est %d\n",excisteCode+1,produit[excisteCode].quantite);
-
-          printf("le prix de produit %d est %f\n",excisteCode+1,produit[excisteCode].prix);
+          printf("le prix : %f\n",produit[excisteCode].prix);
+          printf("---------------------------\n");
 
           puts("Est ce que ca le produit que vous voulez le supprimer ?");
 
-          puts("Tapez [o] si oui ou bien [n] pour non");
+          puts("Tapez [o] si oui ou bien [n] si non");
           scanf("%s",&ouiOuNon);
+          system("cls");
           switch (ouiOuNon){
 
           case 'o':{
           supprimer(produit);
-
+          puts("-----------------------");
+          puts("Le produit est suprimer");
+          puts("-----------------------");
+          system("pause");
+          system("cls");
           }break;
 
           case 'n':{
@@ -395,6 +490,9 @@ case 'S'://Supprimer
 
 
           }
+          if(excisteCode==0){access=0;}
+
+
           excisteCode=-11;
           }
 
@@ -406,28 +504,38 @@ case 'S'://Supprimer
 
 case 'L'://Lister
     {
+        system("cls");
+        if(access==0){
+        printf("---------------------------------\n");
+        printf("-   Aucun produit pour lister   -\n");
+        printf("---------------------------------\n");
+        system("pause");
+        system("cls");
+        break;
+    }
         char choixDeListe;
 
      puts("------------------------Choisir la methode de l'orde---------------------------------");
      puts("Pour lister tous les produits selon l’ordre alphabetique  croissant du nom, press [N]");
-     puts("Pour lister tous les produits selon l’ordre  décroissant du prix, press --------- [P]");
+     puts("Pour lister tous les produits selon l’ordre  decroissant du prix, press --------- [P]");
      puts("-------------------------------------------------------------------------------------");
 
      scanf("%s",&choixDeListe);
-      printf("test 0\n");
+     system("cls");
+      //printf("test 0\n");
      switch (choixDeListe){
-      printf("test 1\n");
+      //printf("test 1\n");
           case 'N':{// ordre avec nom
            printf("test 2\n");
                  ordreParNom(produit);
                  afficherProduits(produit);
+
           }break;
 
           case 'P':{//ordre avec prix
 
                  ordreParPrix(produit);
                  afficherProduits(produit);
-
 
           }break;
 
@@ -444,6 +552,14 @@ case 'L'://Lister
 case 'C': //acheter
     {
      system("clS");
+     if(access==0){
+        printf("---------------------------------\n");
+        printf("-  Aucun produit pour l'achter  -\n");
+        printf("---------------------------------\n");
+        system("pause");
+        system("cls");
+        break;
+    }
      char codeProduit[100];
 
      puts("------------------------\n");
@@ -451,9 +567,9 @@ case 'C': //acheter
      puts("------------------------\n");
 
      scanf("%s",&codeProduit);
-     puts("-------------------------------\n");
+     puts("---------------------------------\n");
      puts("Donner la quantiter a ete acheter\n");
-     puts("-------------------------------\n");
+     puts("---------------------------------\n");
 
      scanf("%d",&quantiterAcheter);
 
@@ -479,13 +595,29 @@ case 'C': //acheter
 
 case 'M'://Alimentez
     {
+        system("cls");
+        if(access==0){
+        printf("---------------------------------\n");
+        printf("- Aucun produit pour allimenter -\n");
+        printf("---------------------------------\n");
+        system("pause");
+        system("cls");
+        break;
+    }
      char codeProduit[100];
 
-     puts("Tapez le code du produit");
+     puts("------------------------\n");
+     puts("Tapez le code du produit\n");
+     puts("------------------------\n");
      scanf("%s",&codeProduit);
 
-     puts("Donner la quantiter a ete acheter");
+     puts("---------------------------------\n");
+     puts("Donner la quantiter a ete ajouter\n");
+     puts("---------------------------------\n");
      scanf("%d",&quantiterAjouter);
+
+     system("pause");
+     system("cls");
 
      rechercheParCode(produit,codeProduit);
 
@@ -498,12 +630,31 @@ case 'M'://Alimentez
 
 case 'E':// etat du stock
     {
+        system("cls");
+        if(access==0){
+        printf("----------------------------------------\n");
+        printf("- Aucun produit pour afficher son etat -\n");
+        printf("----------------------------------------\n");
+        system("pause");
+        system("cls");
+        break;
+    }
         etatDuStocke(produit);
-
+        system("pause");
+        system("cls");
     }break;
 
 case 'U'://statistique
     {
+        system("cls");
+        if(access==0){
+        printf("---------------------------------\n");
+        printf("- Au debut, ajouter des produit -\n");
+        printf("---------------------------------\n");
+        system("pause");
+        system("cls");
+        break;
+    }
     printf("Le prix total est:%f\n",prixTotal);
     printf("Le prix moyenne est:%f\n",prixMoyenne);
     ordreParPrixPourLesStatiques(produit);
@@ -513,10 +664,16 @@ case 'U'://statistique
     }break;
 case 'Q': //quiter le programme
     {
+        for(int y=0;y<5;y++){
+      system("cls");
+      sleep(1);
       printf("         ******************\n");
       printf("         * Bye Byeeeee :D *\n");
       printf("         ******************\n");
-      exit(0);
+      sleep(1);
+
+        }
+        exit(0);
     }break;
 default:
 system("cls");
@@ -527,6 +684,7 @@ puts("|                              |");
 puts("--------------------------------");
 
 sleep(2);
+
 }//fin de switch
 
 
